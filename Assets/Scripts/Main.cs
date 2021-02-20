@@ -24,6 +24,9 @@ namespace Mario
         private SpriteAnimator _gumboAnimator;
         private SpriteAnimator _boxAnimator;
 
+        private Transform _playerTransform;
+        private Vector2 gumboDir = Vector2.left;
+
         //[SerializeField]
         //private SomeView _someView;
         //add links to test views <1>
@@ -35,6 +38,7 @@ namespace Mario
         {
             _playerView.Speed = 5;
             _playerView.JumpForce = 25;
+            _playerTransform = _playerView.GetComponent<Transform>();
 
             _playerAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("PlayerAnimatorConfig");
             _gumboAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GumboAnimatorConfig");
@@ -72,11 +76,35 @@ namespace Mario
 
             if(Input.GetKey(KeyCode.A)) 
             {
-                _playerView.GetComponent<Transform>().Translate(new Vector2(-1, 0) * _playerView.Speed * Time.deltaTime);
+                _playerTransform.Translate(Vector2.left * _playerView.Speed * Time.deltaTime);
             }
             if (Input.GetKey(KeyCode.D)) 
             {
-                _playerView.GetComponent<Transform>().Translate(new Vector2(1, 0) * _playerView.Speed * Time.deltaTime);
+                _playerTransform.Translate(Vector2.right * _playerView.Speed * Time.deltaTime);
+            }
+
+            if (_playerTransform.position.x <= -9)
+            {
+                _playerTransform.position = new Vector2(-9, _playerTransform.position.y);
+            }
+            if (_playerTransform.position.x >= 9)
+            {
+                _playerTransform.position = new Vector2(9, _playerTransform.position.y);
+            }
+
+            foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
+            {
+                gumbo.Translate(gumboDir * _playerView.Speed * Time.deltaTime);
+                if (gumbo.position.x <= -9)
+                {
+                    gumbo.position = new Vector2(-9, gumbo.position.y);
+                    gumboDir *= -1;
+                }
+                if (gumbo.position.x >= 9)
+                {
+                    gumbo.position = new Vector2(9, gumbo.position.y);
+                    gumboDir *= -1;
+                }
             }
 
             //_someManager.Update();
@@ -85,9 +113,9 @@ namespace Mario
 
         private void FixedUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.W) && Math.Abs(_playerView.GetComponent<Rigidbody2D>().velocity.y) < 0.1f)
+            if (Input.GetKeyDown(KeyCode.W) && Math.Abs(_playerView.GetComponent<Rigidbody2D>().velocity.y) < 0.2f)
             {
-                _playerView.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 1) * _playerView.JumpForce;
+                _playerView.GetComponent<Rigidbody2D>().velocity = Vector2.up * _playerView.JumpForce;
             }
             //_someManager.FixedUpdate();
             //update logic managers here <6>
