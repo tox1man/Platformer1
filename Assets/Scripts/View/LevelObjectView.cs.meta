@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: bbda0608d7c0e07499196b0917185072
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - SpriteRenderer: {fileID: 5214228112870510947, guid: cd2842821bfc40243b1c65ccdbed73a6,
+      type: 3}
+  - Collider2D: {fileID: 4407735406189352819, guid: 0c1bd79014e946942933a963b683af20,
+      type: 3}
+  - Rigidbody2D: {fileID: 4407735406189352818, guid: 0c1bd79014e946942933a963b683af20,
+      type: 3}
+  - Transform: {fileID: 4407735406189352816, guid: 0c1bd79014e946942933a963b683af20,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
