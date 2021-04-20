@@ -15,17 +15,23 @@ namespace Mario
         private GameObject _gumbos;
         [SerializeField]
         private GameObject _boxes;
+        [SerializeField]
+        private GameObject _guns;
 
         private SpriteAnimatorConfig _playerAnimatorConfig;
         private SpriteAnimatorConfig _gumboAnimatorConfig;
         private SpriteAnimatorConfig _boxAnimatorConfig;
+        private SpriteAnimatorConfig _gunAnimatorConfig;
 
         private SpriteAnimator _playerAnimator;
         private SpriteAnimator _gumboAnimator;
         private SpriteAnimator _boxAnimator;
+        private SpriteAnimator _gunAnimator;
 
         private Transform _playerTransform;
         private Vector2 gumboDir = Vector2.left;
+
+        private Gun gun;
 
         //[SerializeField]
         //private SomeView _someView;
@@ -43,10 +49,14 @@ namespace Mario
             _playerAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("PlayerAnimatorConfig");
             _gumboAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GumboAnimatorConfig");
             _boxAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("BoxAnimatorConfig");
+            _gunAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GunAnimatorConfig");
 
             _playerAnimator = new SpriteAnimator(_playerAnimatorConfig);
             _gumboAnimator = new SpriteAnimator(_gumboAnimatorConfig);
             _boxAnimator = new SpriteAnimator(_boxAnimatorConfig);
+            _gunAnimator = new SpriteAnimator(_gunAnimatorConfig);
+
+            gun = new Gun(_playerTransform, _guns.transform.GetChild(0).transform, 1);
 
             _playerAnimator.StartAnimation(_playerView.SpriteRenderer, AnimTrack.Run, true, 7);
 
@@ -60,6 +70,10 @@ namespace Mario
                 _boxAnimator.StartAnimation(box.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true, 7);
             }
 
+            //gun.Awake();
+
+            //ANIMATION FOR GUN
+
             //SomeConfig config = Resources.Load("SomeConfig", typeof(SomeConfig))as   SomeConfig;
             //load some configs here <3>
 
@@ -70,6 +84,8 @@ namespace Mario
 
         private void Update()
         {
+            gun.Update();
+
             _playerAnimator.Update();
             _gumboAnimator.Update();
             _boxAnimator.Update();
@@ -105,6 +121,10 @@ namespace Mario
                     gumbo.position = new Vector2(9, gumbo.position.y);
                     gumboDir *= -1;
                 }
+                if (Input.GetKeyDown(KeyCode.W) && Math.Abs(_playerView.GetComponent<Rigidbody2D>().velocity.y) < 0.2f)
+                {
+                    _playerView.GetComponent<Rigidbody2D>().velocity = Vector2.up * _playerView.JumpForce;
+                }
             }
 
             //_someManager.Update();
@@ -113,10 +133,7 @@ namespace Mario
 
         private void FixedUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.W) && Math.Abs(_playerView.GetComponent<Rigidbody2D>().velocity.y) < 0.2f)
-            {
-                _playerView.GetComponent<Rigidbody2D>().velocity = Vector2.up * _playerView.JumpForce;
-            }
+
             //_someManager.FixedUpdate();
             //update logic managers here <6>
         }
@@ -127,5 +144,9 @@ namespace Mario
             //dispose logic managers here <7>
         }
 
+        //private void OnDrawGizmos()
+        //{
+        //    gun.Update();
+        //}
     }
 }
