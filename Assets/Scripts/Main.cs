@@ -12,6 +12,12 @@ namespace Mario
         [SerializeField]
         private LevelObjectView _playerView;
         [SerializeField]
+        private GunView _gunView;
+        [SerializeField]
+        private LevelObjectView _gumboView;
+        [SerializeField]
+        private BulletView _bulletView;
+        [SerializeField]
         private GameObject _gumbos;
         [SerializeField]
         private GameObject _boxes;
@@ -31,7 +37,11 @@ namespace Mario
         private Transform _playerTransform;
         private Vector2 gumboDir = Vector2.left;
 
-        private Gun gun;
+        private PlayerController _playerController;
+        private Gun _gunController;
+
+        private ContactsPuller _contactsPuller;
+
 
         //[SerializeField]
         //private SomeView _someView;
@@ -42,8 +52,6 @@ namespace Mario
 
         private void Awake()
         {
-            _playerView.Speed = 5;
-            _playerView.JumpForce = 25;
             _playerTransform = _playerView.GetComponent<Transform>();
 
             _playerAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("PlayerAnimatorConfig");
@@ -55,10 +63,13 @@ namespace Mario
             _gumboAnimator = new SpriteAnimator(_gumboAnimatorConfig);
             _boxAnimator = new SpriteAnimator(_boxAnimatorConfig);
             _gunAnimator = new SpriteAnimator(_gunAnimatorConfig);
+            _contactsPuller = new ContactsPuller(_playerView.Collider2D);
 
-            gun = new Gun(_playerTransform, _guns.transform.GetChild(0).transform, 1);
+            _playerController = new PlayerController(_playerView, _playerAnimator, _contactsPuller);
 
-            _playerAnimator.StartAnimation(_playerView.SpriteRenderer, AnimTrack.Run, true, 7);
+            _gunController = new Gun(_gunView, _bulletView, _playerView);
+
+            _playerAnimator.StartAnimation(_playerView.SpriteRenderer, AnimTrack.Run, true);
 
             foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
             {
@@ -67,7 +78,7 @@ namespace Mario
 
             foreach (Transform box in _boxes.GetComponentInChildren<Transform>())
             {
-                _boxAnimator.StartAnimation(box.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true, 7);
+                _boxAnimator.StartAnimation(box.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true);
             }
 
             //gun.Awake();
@@ -84,48 +95,13 @@ namespace Mario
 
         private void Update()
         {
-            gun.Update();
+            _gunController.Update();
 
             _playerAnimator.Update();
             _gumboAnimator.Update();
             _boxAnimator.Update();
 
-            if(Input.GetKey(KeyCode.A)) 
-            {
-                _playerTransform.Translate(Vector2.left * _playerView.Speed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.D)) 
-            {
-                _playerTransform.Translate(Vector2.right * _playerView.Speed * Time.deltaTime);
-            }
-
-            if (_playerTransform.position.x <= -9)
-            {
-                _playerTransform.position = new Vector2(-9, _playerTransform.position.y);
-            }
-            if (_playerTransform.position.x >= 9)
-            {
-                _playerTransform.position = new Vector2(9, _playerTransform.position.y);
-            }
-
-            foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
-            {
-                gumbo.Translate(gumboDir * _playerView.Speed * Time.deltaTime);
-                if (gumbo.position.x <= -9)
-                {
-                    gumbo.position = new Vector2(-9, gumbo.position.y);
-                    gumboDir *= -1;
-                }
-                if (gumbo.position.x >= 9)
-                {
-                    gumbo.position = new Vector2(9, gumbo.position.y);
-                    gumboDir *= -1;
-                }
-                if (Input.GetKeyDown(KeyCode.W) && Math.Abs(_playerView.GetComponent<Rigidbody2D>().velocity.y) < 0.2f)
-                {
-                    _playerView.GetComponent<Rigidbody2D>().velocity = Vector2.up * _playerView.JumpForce;
-                }
-            }
+            _contactsPuller.Update();
 
             //_someManager.Update();
             //update logic managers here <5>
@@ -133,9 +109,7 @@ namespace Mario
 
         private void FixedUpdate()
         {
-
-            //_someManager.FixedUpdate();
-            //update logic managers here <6>
+            _playerController.FixedUpdate();
         }
 
         private void OnDestroy()

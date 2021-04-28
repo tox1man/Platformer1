@@ -3,7 +3,20 @@ guid: 47625f10cd5b2e348aadb27fe97daae4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _camera: {instanceID: 0}
+  - _back: {fileID: 6211255779232493613, guid: dd3c70f1001e7604fae4f17a3ed82f20, type: 3}
+  - _playerView: {fileID: 4407735406189352820, guid: 0c1bd79014e946942933a963b683af20,
+      type: 3}
+  - _gunView: {fileID: -674003017327048454, guid: 5404a47305932e542a402aefadbc79c4,
+      type: 3}
+  - _gumboView: {fileID: 1685903175931428222, guid: cd2842821bfc40243b1c65ccdbed73a6,
+      type: 3}
+  - _bulletView: {fileID: 4106599472859943864, guid: 1e2a6580cff38d34c8d300816e3aa3e3,
+      type: 3}
+  - _gumbos: {instanceID: 0}
+  - _boxes: {instanceID: 0}
+  - _guns: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

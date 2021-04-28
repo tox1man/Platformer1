@@ -43,7 +43,7 @@ namespace Mario
             _config = animatorConfig;
         }
 
-        public void StartAnimation(SpriteRenderer renderer, AnimTrack animTrack, bool loop, float speed)
+        public void StartAnimation(SpriteRenderer renderer, AnimTrack animTrack, bool loop, float speed = 7)
         {
             if (_activeAnimations.TryGetValue(renderer, out Animation animation))
             {

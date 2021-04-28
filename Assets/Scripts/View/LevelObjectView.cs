@@ -2,7 +2,7 @@
 
 namespace Mario
 {
-    class LevelObjectView : MonoBehaviour
+    public class LevelObjectView : MonoBehaviour
     {
         public SpriteRenderer SpriteRenderer;
         public Collider2D Collider2D;
