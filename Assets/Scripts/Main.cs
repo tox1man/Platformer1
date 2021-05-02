@@ -40,7 +40,7 @@ namespace Mario
         private PlayerController _playerController;
         private Gun _gunController;
 
-        private ContactsPuller _contactsPuller;
+        private ContactsPuller _playerContactsPuller;
 
 
         //[SerializeField]
@@ -63,9 +63,9 @@ namespace Mario
             _gumboAnimator = new SpriteAnimator(_gumboAnimatorConfig);
             _boxAnimator = new SpriteAnimator(_boxAnimatorConfig);
             _gunAnimator = new SpriteAnimator(_gunAnimatorConfig);
-            _contactsPuller = new ContactsPuller(_playerView.Collider2D);
+            _playerContactsPuller = new ContactsPuller(_playerView.Collider2D);
 
-            _playerController = new PlayerController(_playerView, _playerAnimator, _contactsPuller);
+            _playerController = new PlayerController(_playerView, _playerAnimator, _playerContactsPuller);
 
             _gunController = new Gun(_gunView, _bulletView, _playerView);
 
@@ -101,7 +101,7 @@ namespace Mario
             _gumboAnimator.Update();
             _boxAnimator.Update();
 
-            _contactsPuller.Update();
+            _playerContactsPuller.Update();
 
             //_someManager.Update();
             //update logic managers here <5>
@@ -117,10 +117,5 @@ namespace Mario
             //_someManager.Dispose();
             //dispose logic managers here <7>
         }
-
-        //private void OnDrawGizmos()
-        //{
-        //    gun.Update();
-        //}
     }
 }

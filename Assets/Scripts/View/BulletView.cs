@@ -6,11 +6,12 @@ namespace Mario
     {
         [SerializeField]
         public TrailRenderer _trail;
+        public Collider2D _collider2D;
 
         public void SetVisible(bool visible)
         {
-            if (_trail) _trail.enabled = visible;
-            if (_trail) _trail.Clear();
+            //if (_trail) _trail.enabled = visible;
+            //if (_trail) _trail.Clear();
             SpriteRenderer.enabled = visible;
         }
     }

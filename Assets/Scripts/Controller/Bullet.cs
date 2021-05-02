@@ -7,10 +7,13 @@ namespace Mario
     {
         private Vector2 _velocity;
         private BulletView _bulletView;
+        private ContactsPuller _contactsPuller;
 
         public Bullet(BulletView bulletView)
         {
             _bulletView = bulletView;
+            _contactsPuller = new ContactsPuller(_bulletView.Collider2D);
+            Debug.Log(_contactsPuller);
         }
 
         public void SetVelocity(Vector3 velocity)
@@ -28,7 +31,8 @@ namespace Mario
 
             _bulletView.transform.position = position;
             _bulletView.Rigidbody2D.AddForce(Vector2.zero);
-            _bulletView.Rigidbody2D.AddForce(velocity, ForceMode2D.Impulse);
+            _bulletView.Rigidbody2D.AddForce(velocity, ForceMode2D.Force);
+
             _bulletView.Rigidbody2D.angularVelocity = 0;
 
             _bulletView.SetVisible(true);
@@ -42,5 +46,6 @@ namespace Mario
         public void Update()
         {
         }
+
     }
 }

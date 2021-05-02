@@ -9,7 +9,7 @@ namespace Mario
         private const float _collisionThresh = 0.5f;
 
         private List<ContactPoint2D> _contactsList = new List<ContactPoint2D>();
-        private readonly Collider2D _collider2D;
+        public readonly Collider2D _collider2D;
         private int _contactsCount;
 
         public bool _hasLeftContact { get; private set; }
