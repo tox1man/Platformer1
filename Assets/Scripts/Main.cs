@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mario
@@ -18,58 +19,50 @@ namespace Mario
         [SerializeField]
         private BulletView _bulletView;
         [SerializeField]
+        private LevelObjectView _flagView;
+        [SerializeField]
         private GameObject _gumbos;
         [SerializeField]
         private GameObject _boxes;
         [SerializeField]
-        private GameObject _guns;
+        private GameObject _guns; 
+        [SerializeField]
+        private GameObject _coins;
 
         private SpriteAnimatorConfig _playerAnimatorConfig;
         private SpriteAnimatorConfig _gumboAnimatorConfig;
         private SpriteAnimatorConfig _boxAnimatorConfig;
-        private SpriteAnimatorConfig _gunAnimatorConfig;
+        private SpriteAnimatorConfig _coinAnimatorConfig;
 
         private SpriteAnimator _playerAnimator;
         private SpriteAnimator _gumboAnimator;
         private SpriteAnimator _boxAnimator;
-        private SpriteAnimator _gunAnimator;
-
-        private Transform _playerTransform;
-        private Vector2 gumboDir = Vector2.left;
+        private SpriteAnimator _coinAnimator;
 
         private PlayerController _playerController;
         private Gun _gunController;
+        private Coin _coinController;
+        private Flag _flagController;
 
         private ContactsPuller _playerContactsPuller;
-
-
-        //[SerializeField]
-        //private SomeView _someView;
-        //add links to test views <1>
-
-        //private SomeManager _someManager;
-        //add links to some logic managers <2>
+        private List<LevelObjectView> _coinsView;
 
         private void Awake()
         {
-            _playerTransform = _playerView.GetComponent<Transform>();
-
             _playerAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("PlayerAnimatorConfig");
             _gumboAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GumboAnimatorConfig");
             _boxAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("BoxAnimatorConfig");
-            _gunAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GunAnimatorConfig");
+            _coinAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("CoinAnimatorConfig");
 
             _playerAnimator = new SpriteAnimator(_playerAnimatorConfig);
             _gumboAnimator = new SpriteAnimator(_gumboAnimatorConfig);
             _boxAnimator = new SpriteAnimator(_boxAnimatorConfig);
-            _gunAnimator = new SpriteAnimator(_gunAnimatorConfig);
+            _coinAnimator = new SpriteAnimator(_coinAnimatorConfig);
+
             _playerContactsPuller = new ContactsPuller(_playerView.Collider2D);
-
             _playerController = new PlayerController(_playerView, _playerAnimator, _playerContactsPuller);
-
             _gunController = new Gun(_gunView, _bulletView, _playerView);
-
-            _playerAnimator.StartAnimation(_playerView.SpriteRenderer, AnimTrack.Run, true);
+            _flagController = new Flag(_playerView, _flagView);
 
             foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
             {
@@ -81,6 +74,16 @@ namespace Mario
                 _boxAnimator.StartAnimation(box.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true);
             }
 
+            _coinsView = new List<LevelObjectView>(_coins.transform.childCount);
+            foreach (Transform coin in _coins.GetComponentInChildren<Transform>())
+            {
+                _coinsView.Add(coin.gameObject.GetComponent<LevelObjectView>());
+                _coinAnimator.StartAnimation(coin.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true, 5);
+            }
+            _coinController = new Coin(_playerView, _coinsView, _coinAnimator);
+
+            
+            
             //gun.Awake();
 
             //ANIMATION FOR GUN
@@ -100,6 +103,7 @@ namespace Mario
             _playerAnimator.Update();
             _gumboAnimator.Update();
             _boxAnimator.Update();
+            _coinAnimator.Update();
 
             _playerContactsPuller.Update();
 

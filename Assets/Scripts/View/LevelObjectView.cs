@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Mario
 {
@@ -10,6 +11,13 @@ namespace Mario
         public Transform Transform;
         public float Speed;
         public float JumpForce;
-        //add other useful refs
+        public Action<LevelObjectView> OnLevelObjectContact { get; set; }
+
+        public void OnTriggerEnter2D(Collider2D collider)
+        {
+            var levelObject = collider.gameObject.GetComponent<LevelObjectView>();
+            OnLevelObjectContact?.Invoke(levelObject);
+        }
+
     }
 }

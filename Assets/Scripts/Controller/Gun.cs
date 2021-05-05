@@ -20,7 +20,7 @@ namespace Mario
 
         private List<Bullet> _bullets;
 
-        public Gun(GunView gunView, BulletView bulletView, LevelObjectView playerView, float shootInterval = 2)
+        public Gun(GunView gunView, BulletView bulletView, LevelObjectView playerView, float shootInterval = 5)
         {
             _playerView = playerView;
             _gunView = gunView;
@@ -46,7 +46,7 @@ namespace Mario
             float angle;
             Vector2 direction;
 
-            for (angle = 90; angle < 270; angle += 0.1f)
+            for (angle = 120; angle < 235; angle += 5f)
             {
                 direction.x = Mathf.Cos(Mathf.Deg2Rad * angle);
                 direction.y = Mathf.Sin(Mathf.Deg2Rad * angle);
@@ -112,7 +112,7 @@ namespace Mario
             {
                 if (ScanForTarget())
                 {
-                    _bullets[_bulletIndex].Shoot(_gunTransform.position, _shootDirection * 10);
+                    _bullets[_bulletIndex].Shoot(_gunTransform.position, _shootDirection);
                     _bulletIndex++;
                     _timeTillShot = _shootInterval;
 
