@@ -11,13 +11,14 @@ namespace Mario
         private LevelObjectView _playerView;
         private SpriteAnimator _coinSpriteAnimator;
         private List<LevelObjectView> _coinsView;
+        private UIController _UIcontroller;
 
-        public Coin(LevelObjectView playerView, List<LevelObjectView> coinsView, SpriteAnimator coinSpriteAnimator)
+        public Coin(LevelObjectView playerView, List<LevelObjectView> coinsView, SpriteAnimator coinSpriteAnimator, UIController UIcontroller)
         {
             _playerView = playerView;
             _coinSpriteAnimator = coinSpriteAnimator;
             _coinsView = coinsView;
-
+            _UIcontroller = UIcontroller;
             playerView.OnLevelObjectContact += OnLevelObjectContact;
         }
 
@@ -26,6 +27,7 @@ namespace Mario
             if (_coinsView.Contains(contactView))
             {
                 _coinSpriteAnimator.StopAnimation(contactView.SpriteRenderer);
+                _UIcontroller.IncreaseScore();
                 GameObject.Destroy(contactView.gameObject);
             }
         }

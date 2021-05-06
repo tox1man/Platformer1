@@ -7,5 +7,6 @@
         Jump = 2,
         Turn = 3,
         Die = 4,
+        UI = 5
     }
 }
