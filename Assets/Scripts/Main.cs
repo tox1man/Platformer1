@@ -1,41 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mario
 {
     public class Main : MonoBehaviour
     {
-        [SerializeField]
-        private Camera _camera;
-        [SerializeField]
-        private SpriteRenderer _back;
-        [SerializeField]
-        private LevelObjectView _playerView;
-        [SerializeField]
-        private GunView _gunView;
-        [SerializeField]
-        private LevelObjectView _gumboView;
-        [SerializeField]
-        private BulletView _bulletView;
-        [SerializeField]
-        private LevelObjectView _flagView;
-        [SerializeField]
-        private UIView _UIView;
-        [SerializeField]
-        private GameObject _gumbos;
-        [SerializeField]
-        private GameObject _boxes;
-        [SerializeField]
-        private GameObject _guns; 
-        [SerializeField]
-        private GameObject _coins;
+        #region Fields
+
+        [SerializeField] private Camera         _camera;
+        [SerializeField] private SpriteRenderer _back;
+        [Header("View Components")]
+        [SerializeField] private LevelGeneratorView _levelGeneratorView;
+        [SerializeField] private LevelObjectView    _playerView;
+        [SerializeField] private LevelObjectView    _gumboView;
+        [SerializeField] private LevelObjectView    _flagView;
+        [SerializeField] private BulletView         _bulletView;
+        [SerializeField] private GunView            _gunView;
+        [SerializeField] private UIView             _UIView;
+        [Header("GameObjects Containers")]
+        [SerializeField] private GameObject _gumbos;
+        [SerializeField] private GameObject _boxes;
+        [SerializeField] private GameObject _guns; 
+        [SerializeField] private GameObject _coins;
 
         private SpriteAnimatorConfig _playerAnimatorConfig;
         private SpriteAnimatorConfig _gumboAnimatorConfig;
         private SpriteAnimatorConfig _boxAnimatorConfig;
         private SpriteAnimatorConfig _coinAnimatorConfig;
-        private UIAnimatorConfig _UIAnimatorConfig;
+        private UIAnimatorConfig     _UIAnimatorConfig;
 
         private SpriteAnimator _playerAnimator;
         private SpriteAnimator _gumboAnimator;
@@ -48,12 +40,17 @@ namespace Mario
         private Coin _coinController;
         private Flag _flagController;
         private UIController _UIController;
+        private LevelGeneratorController _levelGeneratorController;
 
         private ContactsPuller _playerContactsPuller;
         private List<LevelObjectView> _coinsView;
+        #endregion
+
+        #region Unity Methods
 
         private void Awake()
         {
+
             _playerAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("PlayerAnimatorConfig");
             _gumboAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("GumboAnimatorConfig");
             _boxAnimatorConfig = Resources.Load<SpriteAnimatorConfig>("BoxAnimatorConfig");
@@ -71,6 +68,7 @@ namespace Mario
             _gunController = new Gun(_gunView, _bulletView, _playerView);
             _flagController = new Flag(_playerView, _flagView);
             _UIController = new UIController(_UIView, _UIAnimator, _UIAnimatorConfig);
+            _levelGeneratorController = new LevelGeneratorController(_levelGeneratorView);
 
             foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
             {
@@ -89,31 +87,48 @@ namespace Mario
                 _coinAnimator.StartAnimation(coin.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Idle, true, 5);
             }
             _coinController = new Coin(_playerView, _coinsView, _coinAnimator, _UIController);
-        }
 
+
+            ///
+            _levelGeneratorController.Awake();
+            ///
+        }
         private void Update()
         {
-            _gunController.Update();
-
-            _playerAnimator.Update();
-            _gumboAnimator.Update();
-            _boxAnimator.Update();
-            _coinAnimator.Update();
-
-
-
+            UpdateControllers();
+            UpdateAnimators();
             _playerContactsPuller.Update();
         }
 
         private void FixedUpdate()
         {
             _playerController.FixedUpdate();
-        }
 
+            _camera.transform.position = new Vector3(_playerView.transform.position.x, 1.5f, -1f);
+        }
         private void OnDestroy()
         {
             //_someManager.Dispose();
             //dispose logic managers here <7>
         }
+
+        #endregion
+
+        #region Methods
+
+        private void UpdateAnimators()
+        {
+            _playerAnimator.Update();
+            _gumboAnimator.Update();
+            _boxAnimator.Update();
+            _coinAnimator.Update();
+        }
+
+        private void UpdateControllers()
+        {
+            _gunController.Update();
+        }
+
+        #endregion
     }
 }
