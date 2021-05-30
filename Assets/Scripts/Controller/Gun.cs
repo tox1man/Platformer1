@@ -74,12 +74,15 @@ namespace Mario
                 {
                     if (hit.transform == _playerView.transform)
                     {
-                        _rays.Add(newOrigin, hit.centroid);
+                        _rays.Add(newOrigin, hit.point);
 
                         //hit
                         return true;
                     }
-                    _rays.Add(newOrigin, hit.centroid);
+                    if (!_rays.ContainsKey(newOrigin) && !_rays.ContainsValue(hit.point))
+                    {
+                        _rays.Add(newOrigin, hit.point);
+                    }
 
                     newDirection = ReflectRay(newDirection, hit.normal);
                     newOrigin = hit.point;

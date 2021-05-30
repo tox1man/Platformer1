@@ -70,6 +70,10 @@ namespace Mario
             _UIController = new UIController(_UIView, _UIAnimator, _UIAnimatorConfig);
             _levelGeneratorController = new LevelGeneratorController(_levelGeneratorView);
 
+            ///
+            _levelGeneratorController.Awake();
+            ///
+
             foreach (Transform gumbo in _gumbos.GetComponentInChildren<Transform>())
             {
                 _gumboAnimator.StartAnimation(gumbo.gameObject.GetComponent<SpriteRenderer>(), AnimTrack.Run, true, 5);
@@ -89,9 +93,6 @@ namespace Mario
             _coinController = new Coin(_playerView, _coinsView, _coinAnimator, _UIController);
 
 
-            ///
-            _levelGeneratorController.Awake();
-            ///
         }
         private void Update()
         {
@@ -104,7 +105,7 @@ namespace Mario
         {
             _playerController.FixedUpdate();
 
-            _camera.transform.position = new Vector3(_playerView.transform.position.x, 1.5f, -1f);
+            _camera.transform.position = new Vector3(_playerView.transform.position.x, 9f, -1f);
         }
         private void OnDestroy()
         {

@@ -19,7 +19,7 @@ namespace Mario
 
         public void OnLevelObjectContact(LevelObjectView contactView)
         {
-            if(contactView == _flagView)
+            if (contactView == _flagView)
             {
 
                 Debug.Log("endgame");

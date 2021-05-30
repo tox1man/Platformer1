@@ -18,15 +18,27 @@ namespace Mario
 
         public void Awake()
         {
-            DrawBoundaries();
-            GenerateFloor(5);
+            // DebugDrawBoundaries();
+            GenerateFloor(_view.FloorLevel, true);
+            GenerateBricks(_view.FloorLevel);
+            GenerateFlag(_view.FloorLevel);
         }
 
-        private void GenerateFloor(int floorLevel)
+        private void GenerateFloor(int floorLevel, bool createSafeZone)
         {
             Tile _floorTile = _view.TileSet[22];
             int holeWidth = 0;
 
+            if (createSafeZone)
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    for (int j = 0; j < floorLevel; j++)
+                    {
+                        _view.Floor.SetTile(new Vector3Int(i, j, 0), _floorTile);
+                    }
+                }
+            }
             for (int i = 0; i < _mapSize.x; i ++)
             {
                 if (holeWidth == 0)
@@ -38,8 +50,7 @@ namespace Mario
                 }
                 if (UnityEngine.Random.value <= _view.HolesFrequency && holeWidth == 0)
                 {
-                    holeWidth = UnityEngine.Random.Range(_view.HolesMinWidth, _view.HolesMaxWidth + 1);
-                    Debug.Log(holeWidth);
+                    holeWidth = UnityEngine.Random.Range(_view.HolesMinWidth + 1, _view.HolesMaxWidth + 1);
                 }
                 if (holeWidth == 0)
                 {
@@ -55,7 +66,54 @@ namespace Mario
             }
         }
 
-        private void DrawBoundaries()
+        private void GenerateBricks(int floorLevel)
+        {
+            Tile brickTile = _view.TileSet[1];
+            Tile boxTile = _view.TileSet[0];
+            float yBoxOffset = 4f;
+
+            for (int j = 0; j < _view.BrickLayers; j++)
+            {
+                for (int i = 0; i < _mapSize.x; i++)
+                {
+                    var randomValue = UnityEngine.Random.value;
+                    if (randomValue <= _view.BrickFrequency / (j + 1))
+                    {
+                        _view.Enviroment.SetTile(new Vector3Int(i, floorLevel + 2 + j, 0), brickTile);
+
+                        if (UnityEngine.Random.value <= _view.BoxFrequency)
+                        {
+                            GameObject.Instantiate(_view.BoxPrefab, new Vector3(i, floorLevel + j + yBoxOffset, 0), Quaternion.identity, _view.BoxParentObject.transform);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GenerateFlag(int floorLevel)
+        {
+            Vector3Int flagPos = new Vector3Int(_mapSize.x - 2, floorLevel + 1, 0);
+            Tile floorTile = _view.TileSet[22];
+            GameObject flag = _view.FlagSceneObject;
+
+            if (_view.Enviroment.GetTile(flagPos + Vector3Int.down) == floorTile)
+            {
+                flag.transform.SetPositionAndRotation(flagPos, Quaternion.identity);
+                flag.SetActive(true);
+            } 
+            else
+            {
+                for (int j = 0; j < floorLevel; j++)
+                {
+                    _view.Floor.SetTile(new Vector3Int(flagPos.x - 1, j, 0), floorTile);
+                }
+                flag.transform.SetPositionAndRotation(flagPos, Quaternion.identity);
+                flag.SetActive(true);
+            }
+
+        }
+
+        private void DebugDrawBoundaries()
         {
             
             Tile _boundaryTile = _view.TileSet[23];
