@@ -12,6 +12,8 @@ namespace Mario
         [Header("Level Object Prefabs")]
         [SerializeField] private GameObject _boxPrefab;
         [SerializeField] private GameObject _boxParentObject;
+        [SerializeField] private GameObject _coinPrefab;
+        [SerializeField] private GameObject _coinParentObject;
         [SerializeField] private GameObject _flagSceneObject;
         [Header("Procedural Generation Settings")]
         [Range(0f, 1f)]
@@ -20,7 +22,8 @@ namespace Mario
         [SerializeField] private float _brickFrequency;
         [Range(0f, 0.1f)]
         [SerializeField] private float _boxFrequency;
-        [SerializeField] private int _floorLevel;
+        [SerializeField] private int _floorLevel = 5;
+        [SerializeField] private int _numberOfCoins = 10;
         [SerializeField] private int _holesMinimumWidth;
         [SerializeField] private int _holesMaximumWidth;
         [SerializeField] private int _brickLayers;
@@ -34,7 +37,9 @@ namespace Mario
         public Grid TileGrid => _tileGrid;
         public Tile[] TileSet => _tileSet;
         public GameObject BoxPrefab => _boxPrefab;
-        public GameObject BoxParentObject => _boxParentObject;        
+        public GameObject BoxParentObject => _boxParentObject;       
+        public GameObject CoinPrefab => _coinPrefab;
+        public GameObject CoinParentObject => _coinParentObject;        
         public GameObject FlagSceneObject => _flagSceneObject;
         public float HolesFrequency => _holesFrequency;
         public float BrickFrequency => _brickFrequency;
@@ -42,6 +47,7 @@ namespace Mario
         public int HolesMinWidth => _holesMinimumWidth;
         public int HolesMaxWidth => _holesMaximumWidth;
         public int FloorLevel => _floorLevel;
+        public int NumberOfCoins => _numberOfCoins;
         public int BrickLayers => _brickLayers;
 
 

@@ -69,8 +69,9 @@ namespace Mario
         private void GenerateBricks(int floorLevel)
         {
             Tile brickTile = _view.TileSet[1];
-            Tile boxTile = _view.TileSet[0];
-            float yBoxOffset = 4f;
+            int yBoxOffset = 4;
+            int coinsRemaining = _view.NumberOfCoins;
+
 
             for (int j = 0; j < _view.BrickLayers; j++)
             {
@@ -79,11 +80,19 @@ namespace Mario
                     var randomValue = UnityEngine.Random.value;
                     if (randomValue <= _view.BrickFrequency / (j + 1))
                     {
-                        _view.Enviroment.SetTile(new Vector3Int(i, floorLevel + 2 + j, 0), brickTile);
+                        Vector3Int TilePosition = new Vector3Int(i, floorLevel + 2 + j, 0);
+                        _view.Enviroment.SetTile(TilePosition, brickTile);
+
+                        if (coinsRemaining > 0)
+                        {
+                            GenerateCoin(TilePosition + new Vector3Int(0, yBoxOffset, 0));
+                            coinsRemaining--;
+                            Debug.Log(TilePosition);
+                        }
 
                         if (UnityEngine.Random.value <= _view.BoxFrequency)
                         {
-                            GameObject.Instantiate(_view.BoxPrefab, new Vector3(i, floorLevel + j + yBoxOffset, 0), Quaternion.identity, _view.BoxParentObject.transform);
+                            GameObject.Instantiate(_view.BoxPrefab, new Vector3Int(i, floorLevel + j + yBoxOffset, 0), Quaternion.identity, _view.BoxParentObject.transform);
                         }
                     }
                 }
@@ -111,6 +120,20 @@ namespace Mario
                 flag.SetActive(true);
             }
 
+        }
+
+        private void GenerateCoin(Vector3Int position)
+        {
+            var randomValue = UnityEngine.Random.value;
+            if (randomValue <= 0.33)
+            {
+                while (_view.Enviroment.GetTile(position) == _view.TileSet[1])
+                {
+                    position += Vector3Int.up;
+                }
+                GameObject.Instantiate(_view.CoinPrefab, position, Quaternion.identity, _view.CoinParentObject.transform);
+
+            }
         }
 
         private void DebugDrawBoundaries()
